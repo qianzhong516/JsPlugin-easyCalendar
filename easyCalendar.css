@@ -1,0 +1,52 @@
+#easy-calendar-wrapper {
+    width: 360px;
+    text-align: center;
+    margin-top: 0;
+    border: 1px solid #ccc;
+    position: absolute;
+}
+#easy-calendar {
+    width: 80%;
+    margin: auto;
+    padding-bottom: 10px;
+}
+#easy-calendar th {
+    min-width: 40px;  
+    margin-right: 10px;
+}
+#easy-calendar td {
+    border: 1px solid #ccc;
+    text-align: right;
+    padding: 5px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+#easy-calendar td:hover {
+    background-color: #bfbfbf;
+}
+#easy-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+}
+#easy-calendar-header button {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    background-color: #666666;
+    color: #fff;
+    text-align: center;
+  
+}
+#easy-calendar-header button svg {
+    font-size: 10px;
+    line-height: 16px;
+}
