@@ -12,6 +12,12 @@
          this.currentMonth = this.months[this.currentMonthIdx]
          this.currentYear = currentYear
          this.id = selector
+         this.input = null
+         this.wrapper = null
+         this.header = null
+         this.calendar = null
+         this.prevBtn = null
+         this.nextBtn = null
          init.call(this)
     }
 
@@ -20,33 +26,38 @@
     /* private methods */
     function init() {
         let _ = this
-        let input = document.querySelector(`#${_.id}`)
-        input.style.position = 'relative'
-        let html = `<div id="easy-calendar-wrapper">
-                        <div id="easy-calendar-header">
-                            <button class="prev"><i class="fas fa-chevron-left"></i></button> 
+        _.input = document.querySelector(`#${_.id}`)
+        _.input.style.position = 'relative'
+
+        _.wrapper = document.createElement('div')
+        _.wrapper.id = "easy-calendar-wrapper"
+
+        _.header = document.createElement('div')
+        _.header.id = "easy-calendar-header"
+        const controls = `<button class="prev"><i class="fas fa-chevron-left"></i></button> 
                                 <span class="title">${this.currentYear} ${this.currentMonth}</span>
-                            <button class="next"><i class="fas fa-chevron-right"></i></button> 
-                        </div>
-                        <div>
-                            <table id="easy-calendar">
-                                <tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
-                            </table>
-                        </div>
-                    </div>`
+                          <button class="next"><i class="fas fa-chevron-right"></i></button>`
+        _.header.innerHTML = controls
 
-        // mount calendar onto body
-        document.querySelector('body').insertAdjacentHTML('beforeend', html)
-        displayDays.call(_)
+        const bottom = document.createElement('div')
+        _.calendar = document.createElement('table')
+        _.calendar.id = "easy-calendar"
+        const tableHeader = `<tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>`
+        _.calendar.innerHTML = tableHeader
+        bottom.appendChild(_.calendar)
 
-        /* bind click event to button controls */
+        _.wrapper.appendChild(_.header)
+        _.wrapper.appendChild(bottom)
+
+        // load table content
+        loadDays.call(_)
         initializeEvents.call(_)
     }
 
     function initializeEvents() {
         let _ = this
-        _.prevBtn = document.querySelector('#easy-calendar-header .prev')
-        _.nextBtn = document.querySelector('#easy-calendar-header .next')
+        _.prevBtn = _.header.querySelector('.prev')
+        _.nextBtn = _.header.querySelector('.next')
 
         // don't bind any argument with prevHandler, because it will be bound to the handler forever
         if(_.prevBtn)
@@ -54,6 +65,20 @@
         
         if(_.nextBtn)
             _.nextBtn.addEventListener('click', nextHandler.bind(_))
+        
+         _.input.addEventListener('focus', () => {
+            // mount calendar onto body
+            document.querySelector('body').appendChild(_.wrapper)
+
+            // remove calendar event
+            window.addEventListener('click', function removeCalendar(e){
+                // remove calendar if e.target is not a child of wrapper, or the input
+                if( !_.wrapper.contains(e.target) && !e.target.isEqualNode(_.input) ){
+                    _.wrapper.remove()
+                    window.removeEventListener('click', removeCalendar, false)
+                }
+            })
+         })
     }
 
     function prevHandler() {
@@ -62,7 +87,7 @@
         _.currentYear = _.currentMonthIdx > 0 ? _.currentYear : _.currentYear - 1 
         _.currentMonthIdx = _.currentMonthIdx > 0 ? _.currentMonthIdx - 1 : 11
         _.currentMonth = _.months[_.currentMonthIdx]
-        displayDays.call(_)
+        loadDays.call(_)
         updateTitle.call(_)
     }
 
@@ -71,13 +96,13 @@
         _.currentYear = _.currentMonthIdx < 11 ? _.currentYear : _.currentYear + 1
         _.currentMonthIdx = _.currentMonthIdx < 11 ? _.currentMonthIdx + 1 : 0
         _.currentMonth = _.months[_.currentMonthIdx]
-        displayDays.call(_)
+        loadDays.call(_)
         updateTitle.call(_)
     }
 
-    function displayDays() {
-        const calendarTable = document.querySelector('#easy-calendar tbody')
-        console.log('displayDays()', 'MonthIdx: ', this.currentMonthIdx, 'currentYear: ', this.currentYear)
+    function loadDays() {
+        const calendarTable = this.calendar.children[0] // select tbody
+        console.log('loadDays()', 'MonthIdx: ', this.currentMonthIdx, 'currentYear: ', this.currentYear)
         const days = calcDaysInMonth(this.currentMonthIdx, this.currentYear)
         let html = ""
 
@@ -85,7 +110,6 @@
         const content = calendarTable.querySelectorAll('.content')
         if(content.length){
             content.forEach(row => {
-                // console.log(row)
                 row.remove()
             })
         }
@@ -106,7 +130,7 @@
     }
 
     function updateTitle() {
-        const calendarTitle = document.querySelector('#easy-calendar-header .title')
+        const calendarTitle = this.header.querySelector('.title')
         calendarTitle.textContent = `${this.currentYear} ${this.currentMonth}`
     }
 
