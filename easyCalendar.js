@@ -79,6 +79,16 @@
                 }
             })
          })
+
+         // select day event
+         _.calendar.addEventListener('click', (e) => {
+             if(e.target.nodeName === 'TD'){
+                 const dd = +e.target.textContent > 9 ? e.target.textContent : `0${e.target.textContent}`
+                 const mm = _.currentMonthIdx > 8 ? _.currentMonthIdx+1 : `0${_.currentMonthIdx+1}` 
+                 const yy = _.currentYear
+                 _.input.value = [dd, mm, yy].join('/')
+             }
+         })
     }
 
     function prevHandler() {
