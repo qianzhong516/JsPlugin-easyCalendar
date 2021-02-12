@@ -40,10 +40,20 @@
         displayDays.call(_)
 
         /* bind click event to button controls */
-        const prevBtn = document.querySelector('#easy-calendar-header .prev')
-        // don't bind any argument with prevHandler, because it will be bound to the handler forever
-        prevBtn.addEventListener('click', prevHandler.bind(_))
+        initializeEvents.call(_)
+    }
 
+    function initializeEvents() {
+        let _ = this
+        _.prevBtn = document.querySelector('#easy-calendar-header .prev')
+        _.nextBtn = document.querySelector('#easy-calendar-header .next')
+
+        // don't bind any argument with prevHandler, because it will be bound to the handler forever
+        if(_.prevBtn)
+            _.prevBtn.addEventListener('click', prevHandler.bind(_))
+        
+        if(_.nextBtn)
+            _.nextBtn.addEventListener('click', nextHandler.bind(_))
     }
 
     function prevHandler() {
@@ -51,6 +61,15 @@
         // year must be calculated before monthIdx
         _.currentYear = _.currentMonthIdx > 0 ? _.currentYear : _.currentYear - 1 
         _.currentMonthIdx = _.currentMonthIdx > 0 ? _.currentMonthIdx - 1 : 11
+        _.currentMonth = _.months[_.currentMonthIdx]
+        displayDays.call(_)
+        updateTitle.call(_)
+    }
+
+    function nextHandler() {
+        let _ = this
+        _.currentYear = _.currentMonthIdx < 11 ? _.currentYear : _.currentYear + 1
+        _.currentMonthIdx = _.currentMonthIdx < 11 ? _.currentMonthIdx + 1 : 0
         _.currentMonth = _.months[_.currentMonthIdx]
         displayDays.call(_)
         updateTitle.call(_)
