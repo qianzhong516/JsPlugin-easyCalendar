@@ -1,0 +1,11 @@
+@import "{{ site.theme }}";
+#main_content {
+    padding-top: 80px;
+    padding-bottom: 200px;
+}
+table {
+    margin-bottom: 0;
+}
+.inner div {
+    width: auto;
+}
