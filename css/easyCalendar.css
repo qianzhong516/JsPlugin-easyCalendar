@@ -16,16 +16,16 @@
     content: "\f054";
 }
 .easy-calendar-wrapper {
-    width: 360px;
+    position: absolute;
+    left: 0;
     text-align: center;
     margin-top: 0;
-    position: absolute;
     z-index: 999999;
+    box-sizing: border-box;
 }
 .easy-calendar {
-    width: 80%;
-    margin: auto;
-    padding-bottom: 10px;
+    padding: 10px 15px;
+    background-color: #fff;
 }
 .easy-calendar th {
     min-width: 40px;  
@@ -41,7 +41,6 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
     padding: 10px;
     box-sizing: border-box;
 }

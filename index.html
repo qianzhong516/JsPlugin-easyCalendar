@@ -1,16 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+---
+layout: default
+---
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easy Calendar</title>
     <link rel="stylesheet" href="css/easyCalendar.css" />
-    <script src="easyCalendar.min.js"></script>
+    <script src="easyCalendar.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
-    <input id="anchor" type="text" placeholder="dd/mm/yy" />
-    <input id="anchor1" type="text" placeholder="dd/mm/yy" style="margin-top: 300px;"/>
+    <h1>Easy Calendar</h1>
+    <div style="margin-top: 50px;">
+        <p>Default Theme:</p>
+        <input id="anchor1" type="text" placeholder="dd/mm/yy" />
+    </div>
+    <div style="margin-top: 50px;">
+        <p>Custom Theme:</p>
+        <input id="anchor" type="text" placeholder="dd/mm/yy" />
+    </div>
     <script>
         const calendar = new EasyCalendar('anchor', {
             theme: {
@@ -24,4 +42,3 @@
         const calendar1 = new EasyCalendar('anchor1')
     </script>
 </body>
-</html>

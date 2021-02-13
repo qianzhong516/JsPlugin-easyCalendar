@@ -48,7 +48,9 @@
         // add a parent div to the input
         const parent = _.input.parentNode
         _.outerWrapper = document.createElement('div')
+        _.outerWrapper.style.width = _.input.offsetWidth
         _.outerWrapper.style.position = 'relative'
+        _.outerWrapper.style.margin = "0 auto"
         parent.replaceChild(_.outerWrapper, _.input)
         _.outerWrapper.appendChild(_.input)
 
