@@ -59,26 +59,26 @@
         _.prevBtn = _.header.querySelector('.prev')
         _.nextBtn = _.header.querySelector('.next')
 
-        // don't bind any argument with prevHandler, because it will be bound to the handler forever
+        // don't bind any argument with prevHandler here, 
+        // because it will be bound to the handler forever
         if(_.prevBtn)
             _.prevBtn.addEventListener('click', prevHandler.bind(_))
         
         if(_.nextBtn)
             _.nextBtn.addEventListener('click', nextHandler.bind(_))
         
+        // show calendar
          _.input.addEventListener('focus', () => {
-            // mount calendar onto body
             document.querySelector('body').appendChild(_.wrapper)
-
-            // remove calendar event
-            window.addEventListener('click', function removeCalendar(e){
-                // remove calendar if e.target is not a child of wrapper, or the input
-                if( !_.wrapper.contains(e.target) && !e.target.isEqualNode(_.input) ){
-                    _.wrapper.remove()
-                    window.removeEventListener('click', removeCalendar, false)
-                }
-            })
          })
+
+        // remove calendar when clicking on the blank area
+        window.addEventListener('click', removeCalendar.bind(_))
+
+        // when click on the wrapper, stop event propagating to the window 
+        _.wrapper.addEventListener('click', (e) => {
+            e.stopPropagation()
+        })
 
          // select day event
          _.calendar.addEventListener('click', cellClickHandler.bind(_))
@@ -91,11 +91,19 @@
     function cellClickHandler(e) {
         let _ = this
         if(e.target.nodeName === 'TD'){
-            if(_.level === 0){
+            if(_.level === 0){ // level = day
                 const dd = +e.target.textContent > 9 ? e.target.textContent : `0${e.target.textContent}`
                 const mm = _.currentMonthIdx > 8 ? _.currentMonthIdx+1 : `0${_.currentMonthIdx+1}` 
                 const yy = _.currentYear
                 _.input.value = [dd, mm, yy].join('/')
+            }
+            if(_.level === 1){ // level = month
+                const monthLiteral = e.target.textContent
+                _.currentMonthIdx = _.months.indexOf(monthLiteral)
+                _.currentMonth = _.months[_.currentMonthIdx]
+                _.level-=1 // navigate back to day level
+                updateTitle.call(_)
+                loadTableContent.call(_)
             }
         }
     }
@@ -104,6 +112,7 @@
         let _ = this
         _.level = (_.level + 1) % 3
         loadTableContent.call(_)
+        updateTitle.call(_)
     }
 
     function prevHandler() {
@@ -129,32 +138,43 @@
         let _ = this 
         _.calendar.innerHTML = ""
 
-        if(_.level === 0){
+        // level = day
+        if(_.level === 0){ 
             const tableHeader = `<tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>`
             _.calendar.innerHTML = tableHeader
-            const calendarTable = _.calendar.children[0] // select tbody
     
             console.log('loadTableContent()', 'MonthIdx: ', _.currentMonthIdx, 'currentYear: ', _.currentYear)
             const days = calcDaysInMonth(_.currentMonthIdx, _.currentYear)
             let html = ""
           
             // append days content
+            const col = 7
             for(let i=0; i<days; i++){
-                if(i%7 === 0 && i>=7){
-                    html=`<tr>${html}</tr>`
-                    calendarTable.insertAdjacentHTML('beforeend', html)
-                    html=""
-                }
-                html+=`<td>${i+1}</td>`        
+                if(i%col === 0)
+                    html+="<tr>"
+                
+                html+=`<td>${i+1}</td>`     
+                
+                if(i%col === col-1)
+                    html+="</tr>"
             } 
-    
-            // append the last row
-            html=`<tr>${html}</tr>` 
-            calendarTable.insertAdjacentHTML('beforeend', html)
+            _.calendar.innerHTML = html
         }
+        
+        // level = month
+        if(_.level === 1) { 
+            const col = 4 // 4 columns in a row
+            let html = ""
+            for(let i=0; i<12; i++) {
+                if(i%col === 0)
+                    html+="<tr>"
 
-        if(_.level === 1) {
+                html+=`<td>${_.months[i]}</td>`
 
+                if(i%col === 3)
+                    html+="</tr>"
+            }
+            _.calendar.innerHTML = html
         }
 
     }
@@ -171,6 +191,15 @@
             calendarTitle.textContent = `${_.currentYear} - ${_.currentYear+12}`
         }
 
+    }
+
+    function removeCalendar(e){
+        console.log('window event fired')
+        let _ = this
+        // remove calendar if e.target is not the input
+        if(!e.target.isEqualNode(_.input)){
+            _.wrapper.remove()
+        }
     }
 
     /* internal/helper methods */
