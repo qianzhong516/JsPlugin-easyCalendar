@@ -50,3 +50,11 @@
     font-size: 10px;
     line-height: 16px;
 }
+#easy-calendar-header .title{
+    cursor: pointer;
+    padding: 2px 15px;
+}
+#easy-calendar-header .title:hover {
+    background: #f2f2f2;
+    border-radius: 4px;
+}

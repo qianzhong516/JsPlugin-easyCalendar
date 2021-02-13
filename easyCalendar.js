@@ -9,7 +9,7 @@
          this.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
          this.currentDate = currentDate
          this.currentMonthIdx = currentMonth
-         this.currentMonth = this.months[this.currentMonthIdx]
+         this.currentMonth = this.months[currentMonth]
          this.currentYear = currentYear
          this.id = selector
          this.input = null
@@ -18,6 +18,7 @@
          this.calendar = null
          this.prevBtn = null
          this.nextBtn = null
+         this.level = 0  // level - 0: day, 1: month, 2: year
          init.call(this)
     }
 
@@ -39,18 +40,17 @@
                           <button class="next"><i class="fas fa-chevron-right"></i></button>`
         _.header.innerHTML = controls
 
-        const bottom = document.createElement('div')
+        const body = document.createElement('div')
         _.calendar = document.createElement('table')
         _.calendar.id = "easy-calendar"
-        const tableHeader = `<tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>`
-        _.calendar.innerHTML = tableHeader
-        bottom.appendChild(_.calendar)
+
+        body.appendChild(_.calendar)
 
         _.wrapper.appendChild(_.header)
-        _.wrapper.appendChild(bottom)
+        _.wrapper.appendChild(body)
 
         // load table content
-        loadDays.call(_)
+        loadTableContent.call(_)
         initializeEvents.call(_)
     }
 
@@ -81,14 +81,29 @@
          })
 
          // select day event
-         _.calendar.addEventListener('click', (e) => {
-             if(e.target.nodeName === 'TD'){
-                 const dd = +e.target.textContent > 9 ? e.target.textContent : `0${e.target.textContent}`
-                 const mm = _.currentMonthIdx > 8 ? _.currentMonthIdx+1 : `0${_.currentMonthIdx+1}` 
-                 const yy = _.currentYear
-                 _.input.value = [dd, mm, yy].join('/')
-             }
-         })
+         _.calendar.addEventListener('click', cellClickHandler.bind(_))
+
+         // level navigator event
+         const calendarTitle = _.header.querySelector('.title')
+         calendarTitle.addEventListener('click', levelHandler.bind(_))
+    }
+
+    function cellClickHandler(e) {
+        let _ = this
+        if(e.target.nodeName === 'TD'){
+            if(_.level === 0){
+                const dd = +e.target.textContent > 9 ? e.target.textContent : `0${e.target.textContent}`
+                const mm = _.currentMonthIdx > 8 ? _.currentMonthIdx+1 : `0${_.currentMonthIdx+1}` 
+                const yy = _.currentYear
+                _.input.value = [dd, mm, yy].join('/')
+            }
+        }
+    }
+
+    function levelHandler() {
+        let _ = this
+        _.level = (_.level + 1) % 3
+        loadTableContent.call(_)
     }
 
     function prevHandler() {
@@ -97,7 +112,7 @@
         _.currentYear = _.currentMonthIdx > 0 ? _.currentYear : _.currentYear - 1 
         _.currentMonthIdx = _.currentMonthIdx > 0 ? _.currentMonthIdx - 1 : 11
         _.currentMonth = _.months[_.currentMonthIdx]
-        loadDays.call(_)
+        loadTableContent.call(_)
         updateTitle.call(_)
     }
 
@@ -106,42 +121,56 @@
         _.currentYear = _.currentMonthIdx < 11 ? _.currentYear : _.currentYear + 1
         _.currentMonthIdx = _.currentMonthIdx < 11 ? _.currentMonthIdx + 1 : 0
         _.currentMonth = _.months[_.currentMonthIdx]
-        loadDays.call(_)
+        loadTableContent.call(_)
         updateTitle.call(_)
     }
 
-    function loadDays() {
-        const calendarTable = this.calendar.children[0] // select tbody
-        console.log('loadDays()', 'MonthIdx: ', this.currentMonthIdx, 'currentYear: ', this.currentYear)
-        const days = calcDaysInMonth(this.currentMonthIdx, this.currentYear)
-        let html = ""
+    function loadTableContent() {
+        let _ = this 
+        _.calendar.innerHTML = ""
 
-        // remove existing content
-        const content = calendarTable.querySelectorAll('.content')
-        if(content.length){
-            content.forEach(row => {
-                row.remove()
-            })
+        if(_.level === 0){
+            const tableHeader = `<tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>`
+            _.calendar.innerHTML = tableHeader
+            const calendarTable = _.calendar.children[0] // select tbody
+    
+            console.log('loadTableContent()', 'MonthIdx: ', _.currentMonthIdx, 'currentYear: ', _.currentYear)
+            const days = calcDaysInMonth(_.currentMonthIdx, _.currentYear)
+            let html = ""
+          
+            // append days content
+            for(let i=0; i<days; i++){
+                if(i%7 === 0 && i>=7){
+                    html=`<tr>${html}</tr>`
+                    calendarTable.insertAdjacentHTML('beforeend', html)
+                    html=""
+                }
+                html+=`<td>${i+1}</td>`        
+            } 
+    
+            // append the last row
+            html=`<tr>${html}</tr>` 
+            calendarTable.insertAdjacentHTML('beforeend', html)
         }
-      
-        // append days content
-        for(let i=0; i<days; i++){
-            if(i%7 === 0 && i>=7){
-                html=`<tr class="content">${html}</tr>`
-                calendarTable.insertAdjacentHTML('beforeend', html)
-                html=""
-            }
-            html+=`<td>${i+1}</td>`        
-        } 
 
-        // append the last row
-        html=`<tr class="content">${html}</tr>` 
-        calendarTable.insertAdjacentHTML('beforeend', html)
+        if(_.level === 1) {
+
+        }
+
     }
 
     function updateTitle() {
-        const calendarTitle = this.header.querySelector('.title')
-        calendarTitle.textContent = `${this.currentYear} ${this.currentMonth}`
+        let _ = this
+        const calendarTitle = _.header.querySelector('.title')
+
+        if(_.level === 0) {
+            calendarTitle.textContent = `${_.currentYear} ${_.currentMonth}`
+        }else if(_.level === 1){
+            calendarTitle.textContent = _.currentYear
+        }else if(_.level === 2){
+            calendarTitle.textContent = `${_.currentYear} - ${_.currentYear+12}`
+        }
+
     }
 
     /* internal/helper methods */
