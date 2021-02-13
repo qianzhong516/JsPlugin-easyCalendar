@@ -22,12 +22,12 @@
 ```js
 {
 	theme: {
-    	borderColor: '#ff3333',
-        headerColor: '#fff',
-        headerBg: '#1a1a1a',
-        navBg: '#666666',
-        cellBg: '#8c8c8c'
-    }  
+		borderColor: '#ff3333',
+		headerColor: '#fff',
+		headerBg: '#1a1a1a',
+		navBg: '#666666',
+		cellBg: '#8c8c8c'
+    	}  
 }
 ```
 
