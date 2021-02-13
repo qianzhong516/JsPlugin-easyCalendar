@@ -166,10 +166,9 @@
 
         // level = day
         if(_.level === 0){ 
-            const tableHeader = `<tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>`
+            const tableHeader = `<tr><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th><th>Su</th></tr>`
             _.calendar.innerHTML = tableHeader
     
-            console.log('loadTableContent()', 'MonthIdx: ', _.currentMonthIdx, 'currentYear: ', _.currentYear)
             const days = calcDaysInMonth(_.currentMonthIdx, _.currentYear)
             let html = ""
           
@@ -184,7 +183,7 @@
                 if(i%col === col-1)
                     html+="</tr>"
             } 
-            _.calendar.innerHTML = html
+            _.calendar.insertAdjacentHTML('beforeend', html)
         }
         
         // level = month
@@ -233,7 +232,6 @@
     }
 
     function removeCalendar(e){
-        console.log('window event fired')
         let _ = this
         // remove calendar if e.target is not the input
         if(!e.target.isEqualNode(_.input)){
