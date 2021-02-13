@@ -11,8 +11,8 @@
     <body>
         <input id="anchor" type="text" placeholder="dd/mm/yy" />
         <script>
-			const calendar = new EasyCalendar('anchor', {options})
-		</script>
+		const calendar = new EasyCalendar('anchor', {options})
+	</script>
     </body>
 </html>
 ```
