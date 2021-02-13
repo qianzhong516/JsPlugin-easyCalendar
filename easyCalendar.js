@@ -224,7 +224,7 @@
 
         // level = day
         if(_.level === 0){ 
-            const tableHeader = `<tr><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th><th>Su</th></tr>`
+            const tableHeader = "<tr><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th><th>Su</th></tr>"
             _.calendar.innerHTML = tableHeader
     
             const days = calcDaysInMonth(_.currentMonthIdx, _.currentYear)
