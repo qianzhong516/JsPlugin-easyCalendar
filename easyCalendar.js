@@ -132,6 +132,11 @@
             _.currentMonth = _.months[_.currentMonthIdx]
         }
 
+        // level = month
+        if(_.level === 1) {
+            _.currentYear-=1
+        }
+
         // level = year
         if(_.level === 2) {
             _.currentYear-=11
@@ -149,6 +154,11 @@
             _.currentYear = _.currentMonthIdx < 11 ? _.currentYear : _.currentYear + 1
             _.currentMonthIdx = _.currentMonthIdx < 11 ? _.currentMonthIdx + 1 : 0
             _.currentMonth = _.months[_.currentMonthIdx]
+        }
+
+        // level = month
+        if(_.level === 1) {
+            _.currentYear+=1
         }
 
         // level = year
