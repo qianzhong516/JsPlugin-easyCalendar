@@ -1,5 +1,7 @@
 # Easy Calendar
 
+An easy-to-use JS Calendar Plugin. View demo [here](https://qianzhong516.github.io/JsPlugin-easyCalendar/).
+
 ## Usage
 
 ```html
