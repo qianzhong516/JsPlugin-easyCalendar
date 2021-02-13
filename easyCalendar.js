@@ -1,6 +1,6 @@
 (function(){
     /* init constructor */
-    EasyCalendar = function(selector) {
+    EasyCalendar = function(selector, options) {
          const today = new Date()
          const currentDate = today.getDate()
          const currentMonth = today.getMonth() // 0 - 11
@@ -19,6 +19,20 @@
          this.prevBtn = null
          this.nextBtn = null
          this.level = 0  // level - 0: day, 1: month, 2: year
+         let defaultOptions = {
+             theme: {
+                 borderColor: '#ccc',
+                 headerColor: '#000',
+                 headerBg: '#ccc',
+                 navBg: '#666666',
+                 cellBg: '#f2f2f2'
+             }
+         }
+         if(options)
+            this.settings = extendSettings(defaultOptions, options)
+         else
+            this.settings = defaultOptions
+
          init.call(this)
     }
 
@@ -27,14 +41,17 @@
     /* private methods */
     function init() {
         let _ = this
+        const randomId = Math.floor(Math.random() * 10000 + 1)
+
         _.input = document.querySelector(`#${_.id}`)
         _.input.style.position = 'relative'
 
         _.wrapper = document.createElement('div')
-        _.wrapper.id = "easy-calendar-wrapper"
+        _.wrapper.className = "easy-calendar-wrapper"
+        _.wrapper.id = `easy-calendar-wrapper-${randomId}`
 
         _.header = document.createElement('div')
-        _.header.id = "easy-calendar-header"
+        _.header.className = "easy-calendar-header"
         const controls = `<button class="prev"><i class="fas fa-chevron-left"></i></button> 
                                 <span class="title">${this.currentYear} ${this.currentMonth}</span>
                           <button class="next"><i class="fas fa-chevron-right"></i></button>`
@@ -42,10 +59,35 @@
 
         const body = document.createElement('div')
         _.calendar = document.createElement('table')
-        _.calendar.id = "easy-calendar"
+        _.calendar.className = "easy-calendar"
 
+        // load styles
+        const style = document.createElement('style')
+        style.textContent = `
+            #easy-calendar-wrapper-${randomId} {
+                border: 1px solid ${_.settings.theme.borderColor};
+            }
+            #easy-calendar-wrapper-${randomId} .easy-calendar td {
+                background-color: ${_.settings.theme.cellBg};
+                border: 1px solid ${_.settings.theme.borderColor};
+            }
+            #easy-calendar-wrapper-${randomId} .easy-calendar td:hover {
+                background-color: ${hexToRGBA(_.settings.theme.cellBg, 0.2)};
+            }
+            #easy-calendar-wrapper-${randomId} .easy-calendar-header {
+                background-color: ${_.settings.theme.headerBg};
+                color: ${_.settings.theme.headerColor};
+            }
+            #easy-calendar-wrapper-${randomId} .easy-calendar-header .title:hover {
+                background-color: ${hexToRGBA(_.settings.theme.cellBg, 0.8)};
+            }
+            #easy-calendar-wrapper-${randomId} .easy-calendar-header button{
+                background-color: ${_.settings.theme.navBg};
+            }
+        `
+        
+        document.head.appendChild(style)
         body.appendChild(_.calendar)
-
         _.wrapper.appendChild(_.header)
         _.wrapper.appendChild(body)
 
@@ -269,5 +311,38 @@
     
         return days
     }
+
+    function hexToRGBA(hex, alpha = 1) { // #FF0000
+        let r, g, b
+        if(hex.substr(1).length === 3) // if use hex shortcuts
+            r = g = b = parseInt(hex.slice(1, 3), 16)
+        else if(hex.substr(1).length === 6){
+            r= parseInt(hex.slice(1, 3), 16)
+            g= parseInt(hex.slice(3, 5), 16)
+            b= parseInt(hex.slice(5, 7), 16)
+        }
+
+        if(r && g && b)
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`
+        
+        return hex
+     }
+
+     function extendSettings(defaultOptions, options) {
+        for(let option in options) {
+            if(defaultOptions.hasOwnProperty(option)){
+                if(typeof defaultOptions[option] === "object"){ 
+                     // the second level of settings
+                    for(let innerOption in options[option]){
+                        if(defaultOptions[option].hasOwnProperty(innerOption))
+                            defaultOptions[option][innerOption] = options[option][innerOption]
+                    }
+                }else{
+                    defaultOptions[option] = options[option]
+                }
+            }
+        }
+        return defaultOptions
+     }
 
 })()
