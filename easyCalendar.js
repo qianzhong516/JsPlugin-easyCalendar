@@ -58,9 +58,9 @@
 
         _.header = document.createElement('div')
         _.header.className = "easy-calendar-header"
-        const controls = `<button class="prev"><i class="fas fa-chevron-left"></i></button> 
+        const controls = `<button class="prev"></button> 
                                 <span class="title">${this.currentYear} ${this.currentMonth}</span>
-                          <button class="next"><i class="fas fa-chevron-right"></i></button>`
+                          <button class="next"></button>`
         _.header.innerHTML = controls
 
         const body = document.createElement('div')

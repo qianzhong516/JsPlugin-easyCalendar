@@ -1,0 +1,76 @@
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('./font/fontawesome-webfont.eot?v=3.2.1');
+    src: url('./font/fontawesome-webfont.eot?#iefix&v=3.2.1') format('embedded-opentype'), url('./font/fontawesome-webfont.woff?v=3.2.1') format('woff'), url('./font/fontawesome-webfont.ttf?v=3.2.1') format('truetype'), url('./font/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
+    readers do not read off random characters that represent icons */
+.icon-chevron-left:before {
+    content: "\f053";
+}
+.icon-chevron-right:before {
+    content: "\f054";
+}
+.easy-calendar-wrapper {
+    width: 360px;
+    text-align: center;
+    margin-top: 0;
+    position: absolute;
+    z-index: 999999;
+}
+.easy-calendar {
+    width: 80%;
+    margin: auto;
+    padding-bottom: 10px;
+}
+.easy-calendar th {
+    min-width: 40px;  
+    margin-right: 10px;
+}
+.easy-calendar td {
+    text-align: right;
+    padding: 5px;
+    cursor: pointer;
+}
+.easy-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.easy-calendar-header button {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    text-align: center;
+}
+.easy-calendar-header button.prev::before {
+    font-family: 'FontAwesome';
+    content: '\f053';    
+    font-size: 12px;
+    line-height: 12px;
+}
+.easy-calendar-header button.next::before {
+    font-family: 'FontAwesome';
+    content: '\f054';
+    font-size: 12px;
+    line-height: 12px;
+}
+.easy-calendar-header .title{
+    cursor: pointer;
+    padding: 2px 15px;
+}
+.easy-calendar-header .title:hover {
+    border-radius: 4px;
+}
