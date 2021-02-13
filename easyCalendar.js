@@ -105,6 +105,12 @@
                 updateTitle.call(_)
                 loadTableContent.call(_)
             }
+            if(_.level === 2){ // level = year
+                _.level-=1
+                _.currentYear = +e.target.textContent
+                updateTitle.call(_)
+                loadTableContent.call(_)
+            }
         }
     }
 
@@ -117,19 +123,39 @@
 
     function prevHandler() {
         let _ = this
-        // year must be calculated before monthIdx
-        _.currentYear = _.currentMonthIdx > 0 ? _.currentYear : _.currentYear - 1 
-        _.currentMonthIdx = _.currentMonthIdx > 0 ? _.currentMonthIdx - 1 : 11
-        _.currentMonth = _.months[_.currentMonthIdx]
+
+        // level = day
+        if(_.level === 0) {
+            // year must be calculated before monthIdx
+            _.currentYear = _.currentMonthIdx > 0 ? _.currentYear : _.currentYear - 1 
+            _.currentMonthIdx = _.currentMonthIdx > 0 ? _.currentMonthIdx - 1 : 11
+            _.currentMonth = _.months[_.currentMonthIdx]
+        }
+
+        // level = year
+        if(_.level === 2) {
+            _.currentYear-=11
+        }
+
         loadTableContent.call(_)
         updateTitle.call(_)
     }
 
     function nextHandler() {
         let _ = this
-        _.currentYear = _.currentMonthIdx < 11 ? _.currentYear : _.currentYear + 1
-        _.currentMonthIdx = _.currentMonthIdx < 11 ? _.currentMonthIdx + 1 : 0
-        _.currentMonth = _.months[_.currentMonthIdx]
+
+        // level = day
+        if(_.level === 0) {
+            _.currentYear = _.currentMonthIdx < 11 ? _.currentYear : _.currentYear + 1
+            _.currentMonthIdx = _.currentMonthIdx < 11 ? _.currentMonthIdx + 1 : 0
+            _.currentMonth = _.months[_.currentMonthIdx]
+        }
+
+        // level = year
+        if(_.level === 2) {
+            _.currentYear+=11
+        }
+
         loadTableContent.call(_)
         updateTitle.call(_)
     }
@@ -177,6 +203,20 @@
             _.calendar.innerHTML = html
         }
 
+        // level = year, 12-year range
+        if(_.level === 2) {
+            const col = 4
+            let html = ""
+            for(let i=0; i<12; i++){
+                if(i%col === 0)
+                    html+="<tr>"
+                html+=`<td>${_.currentYear+i}</td>`
+                if(i%col === 3)
+                    html+="</tr>"
+            }
+            _.calendar.innerHTML = html
+        }
+
     }
 
     function updateTitle() {
@@ -188,9 +228,8 @@
         }else if(_.level === 1){
             calendarTitle.textContent = _.currentYear
         }else if(_.level === 2){
-            calendarTitle.textContent = `${_.currentYear} - ${_.currentYear+12}`
+            calendarTitle.textContent = `${_.currentYear} - ${_.currentYear+11}`
         }
-
     }
 
     function removeCalendar(e){
