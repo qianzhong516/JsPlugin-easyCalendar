@@ -120,6 +120,8 @@
         // show calendar
          _.input.addEventListener('focus', () => {
             _.outerWrapper.appendChild(_.wrapper)
+            // set wrapper min-width after shown
+            _.wrapper.style.minWidth = _.wrapper.offsetWidth + "px"
          })
 
         // remove calendar when clicking on the blank area

@@ -24,6 +24,7 @@
     box-sizing: border-box;
 }
 .easy-calendar {
+    width: 100%;
     padding: 10px 15px;
     background-color: #fff;
 }
