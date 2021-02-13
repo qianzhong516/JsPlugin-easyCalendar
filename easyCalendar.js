@@ -13,6 +13,7 @@
          this.currentYear = currentYear
          this.id = selector
          this.input = null
+         this.outerWrapper = null
          this.wrapper = null
          this.header = null
          this.calendar = null
@@ -44,7 +45,12 @@
         const randomId = Math.floor(Math.random() * 10000 + 1)
 
         _.input = document.querySelector(`#${_.id}`)
-        _.input.style.position = 'relative'
+        // add a parent div to the input
+        const parent = _.input.parentNode
+        _.outerWrapper = document.createElement('div')
+        _.outerWrapper.style.position = 'relative'
+        parent.replaceChild(_.outerWrapper, _.input)
+        _.outerWrapper.appendChild(_.input)
 
         _.wrapper = document.createElement('div')
         _.wrapper.className = "easy-calendar-wrapper"
@@ -111,7 +117,7 @@
         
         // show calendar
          _.input.addEventListener('focus', () => {
-            document.querySelector('body').appendChild(_.wrapper)
+            _.outerWrapper.appendChild(_.wrapper)
          })
 
         // remove calendar when clicking on the blank area
