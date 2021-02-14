@@ -28,8 +28,7 @@
     padding: 10px 15px;
     background-color: #fff;
 }
-.easy-calendar th {
-    min-width: 40px;  
+.easy-calendar th { 
     margin-right: 10px;
 }
 .easy-calendar td {
@@ -73,6 +72,11 @@
 }
 .easy-calendar-header .title:hover {
     border-radius: 4px;
+}
+@media only screen and (min-width: 768px) {
+    .easy-calendar th {
+        min-width: 40px;
+    }
 }
 @media only screen and (max-width: 480px) {
     .easy-calendar-wrapper {
