@@ -57,6 +57,7 @@
         _.wrapper = document.createElement('div')
         _.wrapper.className = "easy-calendar-wrapper"
         _.wrapper.id = `easy-calendar-wrapper-${randomId}`
+        _.wrapper.style.display = "none"
 
         _.header = document.createElement('div')
         _.header.className = "easy-calendar-header"
@@ -98,6 +99,7 @@
         body.appendChild(_.calendar)
         _.wrapper.appendChild(_.header)
         _.wrapper.appendChild(body)
+        _.outerWrapper.appendChild(_.wrapper)
 
         // load table content
         loadTableContent.call(_)
@@ -119,7 +121,7 @@
         
         // show calendar
          _.input.addEventListener('focus', () => {
-            _.outerWrapper.appendChild(_.wrapper)
+            _.wrapper.style.display = "block"
             // set wrapper min-width after shown
             _.wrapper.style.minWidth = _.wrapper.offsetWidth + "px"
          })
@@ -296,7 +298,7 @@
         let _ = this
         // remove calendar if e.target is not the input
         if(!e.target.isEqualNode(_.input)){
-            _.wrapper.remove()
+            _.wrapper.style.display = "none"
         }
     }
 
