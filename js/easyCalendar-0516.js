@@ -48,7 +48,7 @@
         // add a parent div to the input
         const parent = _.input.parentNode
         _.outerWrapper = document.createElement('div')
-        _.outerWrapper.style.width = _.input.offsetWidth + "px"
+        _.outerWrapper.style.display = "inline" // make the width of div the same as input's
         _.outerWrapper.style.position = 'relative'
         _.outerWrapper.style.margin = "0 auto"
         parent.replaceChild(_.outerWrapper, _.input)
@@ -122,8 +122,6 @@
         // show calendar
          _.input.addEventListener('focus', () => {
             _.wrapper.style.display = "block"
-            // set wrapper min-width after shown
-            _.wrapper.style.minWidth = _.wrapper.offsetWidth + "px"
          })
 
         // remove calendar when clicking on the blank area
