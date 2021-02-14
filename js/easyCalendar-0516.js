@@ -119,8 +119,9 @@
         if(_.nextBtn)
             _.nextBtn.addEventListener('click', nextHandler.bind(_))
         
-        // show calendar
-         _.input.addEventListener('focus', () => {
+        // show calendar. Do not use `focus` event here, because on mobile, keyboard popup action
+        // will deactivate the focus event and cause the event not triggered for the first tap.
+         _.input.addEventListener('click', () => {
             _.wrapper.style.display = "block"
          })
 
